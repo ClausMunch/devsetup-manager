@@ -10,6 +10,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getStatus: () => ipcRenderer.invoke('get-status'),
   getLogs: (name: string) => ipcRenderer.invoke('get-logs', name),
   getInstallProgress: (name: string) => ipcRenderer.invoke('get-install-progress', name)
+  ,getNginxSites: () => ipcRenderer.invoke('get-nginx-sites')
+  ,setNginxSites: (cfg:{webDir:string,folders:string[]}) => ipcRenderer.invoke('set-nginx-sites', cfg)
+  ,getInstalledVersions: () => ipcRenderer.invoke('get-installed-versions')
+  ,openDirectory: () => ipcRenderer.invoke('open-directory')
+  ,reloadNginx: () => ipcRenderer.invoke('reload-nginx')
+  ,removeDevsetupHosts: () => ipcRenderer.invoke('remove-devsetup-hosts')
 });
 
 console.log('electronAPI exposed');

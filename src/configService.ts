@@ -1,6 +1,7 @@
 import { app } from 'electron';
-import fs from 'fs/promises';
-import path from 'path';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import { getBaseDir, getConfigDir } from './pathService.js';
 
 export type AppConfig = {
   baseProjectPath?: string;
@@ -9,11 +10,11 @@ export type AppConfig = {
   installedTools?: Record<string, string>;
 };
 
-const CONFIG_FILE = path.join(app.getPath('userData'), 'devsetup-config.json');
+const CONFIG_FILE = path.join(getBaseDir(), 'devsetup-config.json');
 
 export async function loadConfig(): Promise<AppConfig> {
   try {
-    const raw = await fs.readFile(CONFIG_FILE, 'utf-8');
+  const raw = await fs.readFile(CONFIG_FILE, 'utf-8');
     return JSON.parse(raw) as AppConfig;
   } catch (e) {
     return { installedTools: {} };

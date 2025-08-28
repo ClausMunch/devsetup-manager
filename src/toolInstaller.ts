@@ -1,10 +1,12 @@
 import { app } from 'electron';
-import fs from 'fs';
-import fsp from 'fs/promises';
-import path from 'path';
-import https from 'https';
+import * as fs from 'fs';
+import * as fsp from 'fs/promises';
+import * as path from 'path';
+import * as https from 'https';
 import { pipeline } from 'stream/promises';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
+import { getBinDir, getConfigDir, getNginxConfigDir, getPhpConfigDir } from './pathService.js';
+import * as os from 'os';
 
 export async function downloadWithProgress(url: string, dest: string, onProgress?: (percent:number)=>void) {
   await fsp.mkdir(path.dirname(dest), { recursive: true });
@@ -22,6 +24,9 @@ export async function downloadWithProgress(url: string, dest: string, onProgress
   });
 }
 
+// small helper to sleep
+function delay(ms:number){ return new Promise(r=>setTimeout(r,ms)); }
+
 export async function verifyChecksum(filePath:string, expected:string){
   const algo = expected.startsWith('sha256:') ? 'sha256' : 'sha256';
   const exp = expected.replace(/^sha256:/,'')
@@ -35,29 +40,68 @@ export async function verifyChecksum(filePath:string, expected:string){
 }
 
 async function tryExtract(filePath:string,destDir:string){
-  try{
-    if(filePath.endsWith('.zip')){
-      const extract = (await import('extract-zip')).default;
-      await extract(filePath,{dir:destDir});
+  // Extract to a temp dir then move into place to avoid partially extracted state and reduce locks
+  const tmpDir = path.join(os.tmpdir(), `devsetup-extract-${Date.now()}-${Math.random().toString(36).slice(2,8)}`);
+  for(let attempt=0; attempt<3; attempt++){
+    try{
+      await fsp.mkdir(tmpDir, { recursive: true });
+      if(filePath.endsWith('.zip')){
+        const mod = await import('extract-zip');
+        const extract = (mod && ((mod as any).default || mod)) as any;
+        await extract(filePath,{dir:tmpDir});
+      } else if(filePath.endsWith('.tar.gz')||filePath.endsWith('.tgz')){
+        const tar = await import('tar');
+        await tar.x({file:filePath,cwd:tmpDir});
+      } else {
+        // not an archive: copy the file into tmpDir
+        const destFile = path.join(tmpDir, path.basename(filePath));
+        await fsp.copyFile(filePath, destFile);
+      }
+      // move tmpDir contents into destDir
+      await fsp.mkdir(destDir, { recursive: true });
+      const entries = await fsp.readdir(tmpDir);
+      for(const e of entries){
+        const src = path.join(tmpDir, e);
+        const dst = path.join(destDir, e);
+        // try rename, fallback to copy
+        try{ await fsp.rename(src, dst); }catch(_){ await fsp.copyFile(src, dst); }
+      }
+      // cleanup tmp
+      try{ await fsp.rm(tmpDir, { recursive: true, force: true }); }catch(_){ }
       return true;
+    }catch(err){
+      console.warn('Extraction attempt failed', attempt, err);
+      // if locked, wait and retry
+      await delay(250 * (attempt+1));
+      continue;
     }
-    if(filePath.endsWith('.tar.gz')||filePath.endsWith('.tgz')){
-      const tar = await import('tar');
-      await tar.x({file:filePath,cwd:destDir});
-      return true;
-    }
-  }catch(e){ console.warn('Extraction failed',e); }
+  }
   return false;
 }
 
 export async function installTool(toolName: string, version: string, downloadUrl: string, checksum?: string, onProgress?: (p:number)=>void) {
-  const folder = `tools/${toolName}/${version}`;
+  const folder = path.join(getBinDir(), toolName, version);
   const fileName = path.basename(downloadUrl).split('?')[0];
-  const destPath = path.join(app.getPath('userData'), folder, fileName);
+  const destPath = path.join(folder, fileName);
   await fsp.mkdir(path.dirname(destPath), { recursive: true });
-  await downloadWithProgress(downloadUrl, destPath, onProgress);
+  // Report download progress (0-70)
+  await downloadWithProgress(downloadUrl, destPath, (pct)=>{ if(onProgress) onProgress(Math.round(pct*0.7)); });
   if(checksum){ const ok = await verifyChecksum(destPath, checksum); if(!ok) throw new Error('Checksum mismatch'); }
-  const destDir = path.join(app.getPath('userData'), folder);
-  await tryExtract(destPath,destDir);
+  const destDir = path.join(getBinDir(), toolName, version);
+  // Extraction step (70-100)
+  const ok = await tryExtract(destPath,destDir);
+  if(!ok) throw new Error('Extraction failed');
+  if(onProgress) onProgress(100);
+  // create per-service config dirs
+  await fsp.mkdir(getConfigDir(), { recursive: true });
+  await fsp.mkdir(getNginxConfigDir(), { recursive: true });
+  await fsp.mkdir(getPhpConfigDir(), { recursive: true });
   return destPath;
+}
+
+export async function uninstallTool(toolName: string, version?: string){
+  let base = path.join(getBinDir(), toolName);
+  if(version) base = path.join(getBinDir(), toolName, version);
+  // remove the directory
+  await fsp.rm(base, { recursive: true, force: true });
 }
