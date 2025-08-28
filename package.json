@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "electron": "^28.3.3",
+    "extract-zip": "^2.0.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tar": "^7.4.3"
   },
   "devDependencies": {
     "@types/react": "^19.1.12",

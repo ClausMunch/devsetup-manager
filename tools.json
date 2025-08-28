@@ -1,0 +1,171 @@
+{
+  "tools": [
+    {
+      "name": "php",
+      "displayName": "PHP",
+      "versions": [
+        {
+          "version": "8.4.12",
+          "platforms": {
+            "windows": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://downloads.php.net/~windows/releases/php-8.4.12-nts-Win32-vs17-x64.zip",
+                  "checksum": "585a8ea45d31238a36fed4bddddd182723557e2a85a2914e8bc27dad0629d670"
+                }
+              }
+            }
+          }
+        }
+    ]
+    },
+
+    {
+      "name": "nginx",
+      "displayName": "Nginx",
+      "versions": [
+        {
+          "version": "1.25.2",
+          "platforms": {
+            "windows": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://example.com/nginx/1.25.2/windows-x64.zip",
+                  "checksum": "abc123"
+                }
+              }
+            },
+            "darwin": {
+              "arch": {
+                "arm64": {
+                  "downloadUrl": "https://example.com/nginx/1.25.2/macos-arm64.zip"
+                }
+              }
+            }
+          }
+        },
+        {
+          "version": "1.29.1",
+          "platforms": {
+            "windows": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://nginx.org/download/nginx-1.29.1.zip"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "mariadb",
+      "displayName": "MariaDB",
+      "versions": [
+        {
+          "version": "11.3.2",
+          "platforms": {
+            "windows": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://example.com/mariadb/11.3.2/windows-x64.zip"
+                }
+              }
+            },
+            "linux": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://example.com/mariadb/11.3.2/linux-x64.tar.gz"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "mailpit",
+      "displayName": "Mailpit",
+      "versions": [
+        {
+          "version": "1.9.1",
+          "platforms": {
+            "windows": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://github.com/axllent/mailpit/releases/download/v1.27.7/mailpit-windows-amd64.zip",
+                  "checksum": "sha256:80e26d163f7bc3204ca8ff44d80e1812a850288f649be2d533fe5bbf552a65b9"
+                }
+              }
+            },
+            "darwin": {
+              "arch": {
+                "arm64": {
+                  "downloadUrl": "https://github.com/axllent/mailpit/releases/download/v1.27.7/mailpit-darwin-arm64.tar.gz",
+                  "checksum": "sha256:912930b4708d2dcce4170f239516acd65c02d4fa30258ecf0a344b06f77ef6e1"
+                }
+              }
+            },
+            "linux": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://example.com/mailpit/1.9.1/mailpit-linux-x64"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "redis",
+      "displayName": "Redis",
+      "versions": [
+        {
+          "version": "7.2.4",
+          "platforms": {
+            "windows": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://example.com/redis/7.2.4/windows-x64.zip"
+                }
+              }
+            },
+            "darwin": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://example.com/redis/7.2.4/macos-x64.tar.gz"
+                },
+                "arm64": {
+                  "downloadUrl": "https://example.com/redis/7.2.4/macos-arm64.tar.gz"
+                }
+              }
+            },
+            "linux": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://example.com/redis/7.2.4/linux-x64.tar.gz"
+                }
+              }
+            }
+          }
+        },
+        {
+          "version": "7.0.10",
+          "platforms": {
+            "windows": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://example.com/redis/7.0.10/windows-x64.zip"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
