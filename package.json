@@ -1,0 +1,25 @@
+{
+  "name": "devsetup-manager",
+  "version": "1.0.0",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "concurrently \"vite\" \"electron .\"",
+    "dev": "vite",
+    "build": "tsc && electron-builder",
+    "build-main": "tsc src/main.ts src/preload.ts src/toolApi.ts --outDir . --target ES2020 --module ESNext --moduleResolution Node"
+  },
+  "dependencies": {
+    "electron": "^28.3.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.8",
+    "@vitejs/plugin-react": "^4.1.0",
+    "concurrently": "^8.2.0",
+    "typescript": "^5.2.0",
+    "vite": "^5.0.0"
+  }
+}
