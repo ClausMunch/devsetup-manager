@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
+import { registerListDirectoriesHandler } from './src/listDirectories.js';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { fetchTools } from './toolApi.js';
@@ -21,6 +22,7 @@ async function createWindow() {
     await win.loadURL('http://localhost:5173');
 }
 app.whenReady().then(async () => {
+    registerListDirectoriesHandler();
     console.log('App ready, loading config');
     config = await loadConfig();
     toolStatus = { ...(config.installedTools || {}) };
@@ -34,6 +36,21 @@ app.whenReady().then(async () => {
         try {
             const result = await fetchTools();
             console.log('Fetch result:', result);
+            // Ensure services array exists and merge persisted services from config
+            result.services = result.services || [];
+            if (config.services && Array.isArray(config.services)) {
+                for (const persisted of config.services) {
+                    const idx = result.services.findIndex((s) => s.name === persisted.name);
+                    if (idx !== -1) {
+                        // merge persisted fields (port, autoStart, displayName)
+                        result.services[idx] = Object.assign({}, result.services[idx], persisted);
+                    }
+                    else {
+                        // add persisted service entry so UI shows it
+                        result.services.push(persisted);
+                    }
+                }
+            }
             // initialize status map
             result.tools.forEach((t) => { if (!toolStatus[t.name])
                 toolStatus[t.name] = 'not_installed'; });
@@ -231,6 +248,34 @@ app.whenReady().then(async () => {
         }
         catch (e) {
             console.error('set-nginx-sites failed', e);
+            return { ok: false, error: String(e) };
+        }
+    });
+    // create a new managed service (persist to config)
+    ipcMain.handle('create-service', async (_e, payload) => {
+        try {
+            config.services = config.services || [];
+            // normalize minimal payload, persist port and autoStart
+            const svc = {
+                name: payload.name,
+                displayName: payload.displayName || payload.name,
+                category: payload.category || 'other',
+                port: payload.port || '',
+                autoStart: !!payload.autoStart,
+                // keep versions empty for persisted-only entries
+                versions: payload.versions || []
+            };
+            // replace existing persisted item if present
+            const existingIdx = config.services.findIndex(s => s.name === svc.name);
+            if (existingIdx !== -1) config.services[existingIdx] = svc; else config.services.push(svc);
+            await saveConfig(config);
+            // ensure status map has an entry
+            if (!toolStatus[svc.name])
+                toolStatus[svc.name] = 'not_installed';
+            return { ok: true, service: svc };
+        }
+        catch (e) {
+            console.error('create-service failed', e);
             return { ok: false, error: String(e) };
         }
     });

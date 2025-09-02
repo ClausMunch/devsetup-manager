@@ -12,10 +12,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getInstallProgress: (name) => ipcRenderer.invoke('get-install-progress', name)
   ,getNginxSites: () => ipcRenderer.invoke('get-nginx-sites')
   ,setNginxSites: (cfg) => ipcRenderer.invoke('set-nginx-sites', cfg)
+  ,listDirectories: (dirPath) => ipcRenderer.invoke('list-directories', dirPath)
   ,getInstalledVersions: () => ipcRenderer.invoke('get-installed-versions')
   ,openDirectory: () => ipcRenderer.invoke('open-directory')
   ,reloadNginx: () => ipcRenderer.invoke('reload-nginx')
   ,removeDevsetupHosts: () => ipcRenderer.invoke('remove-devsetup-hosts')
+  ,createService: (payload) => ipcRenderer.invoke('create-service', payload)
 });
 
 console.log('electronAPI (CJS) exposed');

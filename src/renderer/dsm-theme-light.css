@@ -1,0 +1,94 @@
+/* Overhaul: Modern light UI for DSM */
+:root {
+  --background: #f7f7fa;
+  --panel: #fff;
+  --sidebar: #f0f0f5;
+  --sidebar-active: #e0e0eb;
+  --text: #222;
+  --muted: #888;
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --border: #e5e7eb;
+  --card: #fff;
+  --shadow: 0 2px 8px rgba(0,0,0,0.04);
+  --status-running: #22c55e;
+  --status-stopped: #f87171;
+  --status-installed: #a3e635;
+}
+
+body, html, .app {
+  background: var(--background);
+  color: var(--text);
+}
+
+.sidebar {
+  background: var(--sidebar);
+  color: var(--text);
+}
+
+.sidebar .active {
+  background: var(--sidebar-active);
+}
+
+.card, .table, .tools-list, .quick-actions {
+  background: var(--card);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.status-dot.running {
+  background: var(--status-running);
+}
+.status-dot.stopped {
+  background: var(--status-stopped);
+}
+.status-dot.installed {
+  background: var(--status-installed);
+}
+
+button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background: var(--primary-dark);
+}
+
+/* Modal styles for add-service */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal {
+  width: 760px;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+.modal-header h3 { margin: 0 0 6px 0; }
+.modal-body { padding: 12px 0; }
+.modal-footer { padding-top: 8px; }
+
+/* Add Service button styling */
+.add-service-btn {
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.add-service-btn:hover { opacity: 0.95; transform: translateY(-1px); }

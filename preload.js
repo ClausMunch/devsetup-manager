@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getInstalledVersions: () => ipcRenderer.invoke('get-installed-versions'),
     openDirectory: () => ipcRenderer.invoke('open-directory'),
     reloadNginx: () => ipcRenderer.invoke('reload-nginx'),
-    removeDevsetupHosts: () => ipcRenderer.invoke('remove-devsetup-hosts')
+    removeDevsetupHosts: () => ipcRenderer.invoke('remove-devsetup-hosts'),
+    listDirectories: (dirPath) => ipcRenderer.invoke('list-directories', dirPath)
 });
 console.log('electronAPI exposed');

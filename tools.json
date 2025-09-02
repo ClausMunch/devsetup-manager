@@ -16,34 +16,56 @@
               }
             }
           }
-        }
-    ]
-    },
-
-    {
-      "name": "nginx",
-      "displayName": "Nginx",
-      "versions": [
+        },
         {
-          "version": "1.25.2",
+          "version": "8.3.25",
           "platforms": {
             "windows": {
               "arch": {
                 "x64": {
-                  "downloadUrl": "https://example.com/nginx/1.25.2/windows-x64.zip",
-                  "checksum": "abc123"
-                }
-              }
-            },
-            "darwin": {
-              "arch": {
-                "arm64": {
-                  "downloadUrl": "https://example.com/nginx/1.25.2/macos-arm64.zip"
+                  "downloadUrl": "https://downloads.php.net/~windows/releases/php-8.3.25-nts-Win32-vs16-x64.zip",
+                  "checksum": "66023a578b9a299827fb6d1993d6afe07a7b12623192d59ab935656a96e9a5ce"
                 }
               }
             }
           }
         },
+        {
+          "version": "8.2.29",
+          "platforms": {
+            "windows": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://downloads.php.net/~windows/releases/php-8.2.29-nts-Win32-vs16-x64.zip",
+                  "checksum": "00ce01ef2d2b4245354ac7cd0cc94e202a908479da4f288b1aa3354176077c44"
+                }
+              }
+            }
+          }
+        },
+        {
+          "version": "8.1.33",
+          "platforms": {
+            "windows": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://downloads.php.net/~windows/releases/php-8.1.33-nts-Win32-vs16-x64.zip",
+                  "checksum": "da7b4209072731b6099858030f7db98bc040ed670758a288a0a6208bc691feb2"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "services": [
+    {
+      "name": "nginx",
+      "category": "web",
+      "displayName": "Nginx",
+      "port": 80,
+      "versions": [
         {
           "version": "1.29.1",
           "platforms": {
@@ -53,15 +75,42 @@
                   "downloadUrl": "https://nginx.org/download/nginx-1.29.1.zip"
                 }
               }
+            },
+            "darwin": {
+              "arch": {
+                "arm64": {
+                  "downloadUrl": "https://nginx.org/download/nginx-1.29.1.tar.gz"
+                }
+              }
+            }
+          }
+        },
+        {
+          "version": "1.28.0",
+          "platforms": {
+            "windows": {
+              "arch": {
+                "x64": {
+                  "downloadUrl": "https://nginx.org/download/nginx-1.28.0.zip"
+                }
+              }
+            },
+            "darwin": {
+              "arch": {
+                "arm64": {
+                  "downloadUrl": "https://nginx.org/download/nginx-1.28.0.tar.gz"
+                }
+              }
             }
           }
         }
       ]
     },
-
     {
       "name": "mariadb",
+      "category": "database",
       "displayName": "MariaDB",
+      "port": 3306,
       "versions": [
         {
           "version": "11.3.2",
@@ -87,6 +136,7 @@
 
     {
       "name": "mailpit",
+      "category": "email",
       "displayName": "Mailpit",
       "versions": [
         {
@@ -122,7 +172,9 @@
 
     {
       "name": "redis",
+      "category": "queue",
       "displayName": "Redis",
+      "port": 6379,
       "versions": [
         {
           "version": "7.2.4",

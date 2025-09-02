@@ -2,7 +2,7 @@
 // 🖥️ DevSetup Manager – Electron + React + TypeScript App
 // =========================================================
 //
-// A local development tool like Laragon or Laravel Herd,
+// A local development tool like Laragon or DSM,
 // built in Electron. Supports starting/stopping dev tools
 // like PHP, Nginx, MariaDB, and Mailpit.
 // 
